@@ -8,6 +8,7 @@
     "test": "vitest run",
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:pages": "BASE_PATH=/gsconflict/ npm run build",
     "preview": "vite preview",
     "typecheck": "tsc"
   },
