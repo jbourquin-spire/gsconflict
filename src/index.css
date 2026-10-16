@@ -1,0 +1,86 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+ * Dark "telemetry" theme: near-black navy surfaces, slate-blue labels and
+ * headings, bright monospace values, mint green for nominal/positive state.
+ * The app is dark-only, so the tokens live on :root.
+ */
+:root {
+  color-scheme: dark;
+  --radius: 0.875rem;
+
+  --background: #070a11; /* page */
+  --foreground: #e9eef7; /* values */
+  --card: #0b0f18; /* panels */
+  --card-foreground: #e9eef7;
+  --popover: #0e1420;
+  --popover-foreground: #e9eef7;
+  --primary: #8fa3d6; /* slate-blue accent */
+  --primary-foreground: #070a11;
+  --secondary: #151c2b;
+  --secondary-foreground: #aab5cc;
+  --muted: #101623;
+  --muted-foreground: #8b97b1; /* labels, descriptions */
+  --heading: #8a96b2; /* section headings */
+  --accent: #151c2b;
+  --accent-foreground: #e9eef7;
+  --destructive: #f0707a;
+  --success: #5fdc98; /* mint, as in "0.063°/s" */
+  --border: #1c2434;
+  --input: #232c3f;
+  --ring: #5b6c94;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: calc(var(--radius) - 2px);
+  --radius-xl: var(--radius);
+  --font-mono:
+    "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-heading: var(--heading);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    background: var(--background);
+  }
+  body {
+    @apply min-h-screen text-foreground antialiased;
+    background:
+      radial-gradient(
+        900px 500px at 50% -10%,
+        rgb(30 42 70 / 0.35),
+        transparent 70%
+      ),
+      var(--background);
+  }
+  /* Native date picker / file button icons on dark surfaces */
+  ::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+  }
+}
