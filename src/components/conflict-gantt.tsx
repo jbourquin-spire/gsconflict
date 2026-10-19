@@ -35,13 +35,13 @@ function Bar({
   rangeLength,
   color,
 }: BarProps) {
-  const left = ((transit.startMs - rangeStart) / rangeLength) * 100
-  const width = ((transit.stopMs - transit.startMs) / rangeLength) * 100
+  const left = ((transit.aosMs - rangeStart) / rangeLength) * 100
+  const width = ((transit.losMs - transit.aosMs) / rangeLength) * 100
 
   const overlapStart = reference
-    ? Math.max(transit.startMs, reference.startMs)
+    ? Math.max(transit.aosMs, reference.aosMs)
     : 0
-  const overlapStop = reference ? Math.min(transit.stopMs, reference.stopMs) : 0
+  const overlapStop = reference ? Math.min(transit.losMs, reference.losMs) : 0
 
   return (
     <Tooltip>
@@ -50,8 +50,8 @@ function Bar({
           tabIndex={0}
           role="img"
           aria-label={`${transit.satellite}, ${formatUtcTime(
-            transit.startMs,
-          )} to ${formatUtcTime(transit.stopMs)} UTC`}
+            transit.aosMs,
+          )} to ${formatUtcTime(transit.losMs)} UTC`}
           className="absolute top-1 bottom-1 min-w-0.5 rounded-[3px] outline-none transition-[filter] hover:brightness-125 focus-visible:ring-2 focus-visible:ring-ring"
           style={{
             left: `${left}%`,
@@ -64,8 +64,8 @@ function Bar({
         <div className="font-mono font-semibold text-foreground">{transit.satellite}</div>
         <div>NORAD ID: {transit.noradId || 'n/a'}</div>
         <div>Ground station: {transit.groundStation}</div>
-        <div>Start: {formatUtc(transit.startMs)} UTC</div>
-        <div>Stop: {formatUtc(transit.stopMs)} UTC</div>
+        <div>AOS: {formatUtc(transit.aosMs)} UTC</div>
+        <div>LOS: {formatUtc(transit.losMs)} UTC</div>
         <div>Duration: {formatDuration(transit.durationS)}</div>
         {reference && (
           <div className="mt-1 border-t border-border pt-1">
@@ -84,13 +84,13 @@ function Bar({
  */
 export function ConflictGantt({ transit, conflicts }: ConflictGanttProps) {
   const rows = [transit, ...conflicts]
-  const rangeStart = Math.min(...rows.map((row) => row.startMs))
-  const rangeStop = Math.max(...rows.map((row) => row.stopMs))
+  const rangeStart = Math.min(...rows.map((row) => row.aosMs))
+  const rangeStop = Math.max(...rows.map((row) => row.losMs))
   const rangeLength = Math.max(rangeStop - rangeStart, 1)
 
-  const referenceLeft = ((transit.startMs - rangeStart) / rangeLength) * 100
+  const referenceLeft = ((transit.aosMs - rangeStart) / rangeLength) * 100
   const referenceWidth =
-    ((transit.stopMs - transit.startMs) / rangeLength) * 100
+    ((transit.losMs - transit.aosMs) / rangeLength) * 100
 
   const ticks = Array.from({ length: TICK_COUNT }, (_, i) => {
     const fraction = i / (TICK_COUNT - 1)

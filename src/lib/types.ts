@@ -20,16 +20,22 @@ export interface GroundStation {
 
 export interface Transit {
   id: string
-  /** Unix epoch milliseconds */
-  startMs: number
-  /** Unix epoch milliseconds */
-  stopMs: number
-  /** Seconds */
+  /** Acquisition of signal, Unix epoch milliseconds */
+  aosMs: number
+  /** Loss of signal, Unix epoch milliseconds */
+  losMs: number
+  /** AOS to LOS, in seconds */
   durationS: number
+  /** Time of peak (maximum) elevation, Unix epoch milliseconds */
+  peakMs: number
+  /** Elevation at the peak, in degrees */
+  peakElevationDeg: number
+  /** Time of closest approach, Unix epoch milliseconds */
+  tcaMs: number
   groundStation: string
   satellite: string
   noradId: string
-  /** Number of other transits at the same ground station that intersect this one */
+  /** Number of other transits at the same ground station whose AOS–LOS range intersects this one */
   conflicts: number
 }
 

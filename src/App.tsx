@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Download, Loader2 } from 'lucide-react'
 import { MultiSelectFilter } from '@/components/multi-select-filter'
 import { TRANSIT_COLUMN_COUNT, TransitRow } from '@/components/transit-row'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -30,6 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { downloadCsv, transitsToCsv } from '@/lib/export'
 import { formatElapsed, formatUtc } from '@/lib/format'
 import { parseElementFile, parseGroundStations } from '@/lib/parse'
 import {
@@ -276,8 +277,17 @@ export default function App() {
     setPage(0)
   }
 
+  function exportCsv() {
+    if (!transits || !filteredTransits) return
+    const stamp = new Date().toISOString().slice(0, 19).replace(/[-:]/g, '').replace('T', '-')
+    downloadCsv(
+      transitsToCsv(filteredTransits, transits),
+      `transits-${stamp}.csv`,
+    )
+  }
+
   return (
-    <main className="mx-auto flex max-w-6xl flex-col gap-6 p-6">
+    <main className="flex w-full flex-col gap-6 p-6">
       <header>
         <h1 className="text-2xl font-semibold text-foreground">Ground Station Conflicts</h1>
         <p className="text-sm text-muted-foreground">
@@ -474,7 +484,18 @@ export default function App() {
       {transits && analysisWindow && (
         <Card>
           <CardHeader>
-            <CardTitle>Transits</CardTitle>
+            <div className="flex items-start justify-between gap-4">
+              <CardTitle>Transits</CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!filteredTransits || filteredTransits.length === 0}
+                onClick={exportCsv}
+              >
+                <Download />
+                Export CSV
+              </Button>
+            </div>
             <CardDescription>
               {isFiltered && filteredTransits
                 ? `${filteredTransits.length.toLocaleString()} of ${transits.length.toLocaleString()}`
@@ -504,17 +525,6 @@ export default function App() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Start time (UTC)</TableHead>
-                  <TableHead>Stop time (UTC)</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>
-                    <MultiSelectFilter
-                      label="Ground station"
-                      options={stationOptions}
-                      selected={stationFilter}
-                      onChange={changeStationFilter}
-                    />
-                  </TableHead>
                   <TableHead>
                     <MultiSelectFilter
                       label="Satellite"
@@ -524,6 +534,18 @@ export default function App() {
                     />
                   </TableHead>
                   <TableHead>NORAD ID</TableHead>
+                  <TableHead>AOS time (UTC)</TableHead>
+                  <TableHead>LOS time (UTC)</TableHead>
+                  <TableHead>Duration</TableHead>
+                  <TableHead>Peak elevation</TableHead>
+                  <TableHead>
+                    <MultiSelectFilter
+                      label="Ground station"
+                      options={stationOptions}
+                      selected={stationFilter}
+                      onChange={changeStationFilter}
+                    />
+                  </TableHead>
                   <TableHead className="text-center">Conflicts</TableHead>
                 </TableRow>
               </TableHeader>

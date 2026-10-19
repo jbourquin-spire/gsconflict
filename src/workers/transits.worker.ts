@@ -42,14 +42,19 @@ self.onmessage = (event: MessageEvent<WorkerJob>) => {
         { timestampFormat: TimestampFormat.Unix },
       )
       for (const pass of passes) {
-        const start = Number(pass.start)
-        const stop = Number(pass.stop)
-        if (stop <= startMs || start >= stopMs) continue
+        // Use the AOS/LOS events (where the satellite crosses the minimum
+        // elevation) rather than the pass start/stop (horizon crossings).
+        const aos = Number(pass.aos.epoch)
+        const los = Number(pass.los.epoch)
+        if (los <= startMs || aos >= stopMs) continue
         transits.push({
-          id: `${satellite.id}|${groundStation.name}|${start}`,
-          startMs: start,
-          stopMs: stop,
-          durationS: pass.duration,
+          id: `${satellite.id}|${groundStation.name}|${aos}`,
+          aosMs: aos,
+          losMs: los,
+          durationS: (los - aos) / 1000,
+          peakMs: Number(pass.peak.epoch),
+          peakElevationDeg: Number(pass.peak.elevation),
+          tcaMs: Number(pass.tca.epoch),
           groundStation: groundStation.name,
           satellite: satellite.name,
           noradId: satellite.noradId,

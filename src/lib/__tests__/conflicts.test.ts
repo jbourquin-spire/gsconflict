@@ -2,12 +2,15 @@ import { describe, expect, it } from 'vitest'
 import { countConflicts, findConflicts } from '../conflicts'
 import type { Transit } from '../types'
 
-function transit(id: string, startMs: number, stopMs: number): Transit {
+function transit(id: string, aosMs: number, losMs: number): Transit {
   return {
     id,
-    startMs,
-    stopMs,
-    durationS: (stopMs - startMs) / 1000,
+    aosMs,
+    losMs,
+    durationS: (losMs - aosMs) / 1000,
+    peakMs: aosMs,
+    peakElevationDeg: 45,
+    tcaMs: aosMs,
     groundStation: 'GS',
     satellite: id,
     noradId: id,
@@ -33,7 +36,7 @@ describe('conflicts', () => {
     )
   })
 
-  it('lists the conflicting transits sorted by start time', () => {
+  it('lists the conflicting transits sorted by AOS time', () => {
     expect(findConflicts(a, all).map((t) => t.id)).toEqual(['e', 'b'])
   })
 

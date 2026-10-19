@@ -1,14 +1,14 @@
 import type { Transit } from './types'
 
 /**
- * Two transits conflict when their time ranges intersect. Ranges that merely
- * touch (one stops exactly when the other starts) do not intersect.
+ * Two transits conflict when their AOS–LOS ranges intersect. Ranges that merely
+ * touch (one LOS exactly when the other's AOS) do not intersect.
  */
 export function intersects(
-  a: Pick<Transit, 'startMs' | 'stopMs'>,
-  b: Pick<Transit, 'startMs' | 'stopMs'>,
+  a: Pick<Transit, 'aosMs' | 'losMs'>,
+  b: Pick<Transit, 'aosMs' | 'losMs'>,
 ): boolean {
-  return a.startMs < b.stopMs && b.startMs < a.stopMs
+  return a.aosMs < b.losMs && b.aosMs < a.losMs
 }
 
 /** Number of entries in the sorted array that are strictly less than `value`. */
@@ -39,21 +39,21 @@ function countAtMost(sorted: Float64Array, value: number): number {
  * For every transit, counts how many *other* transits in the list intersect it.
  * The list should contain the transits of a single ground station.
  *
- * Another transit does NOT intersect transit T exactly when it starts at/after
- * T stops, or stops at/before T starts (these two cases cannot both hold).
- * Every transit that stops at/before T starts also starts before T stops, so:
- *   intersecting = (#starts < T.stop) − (#stops ≤ T.start) − 1 (T itself)
+ * Another transit does NOT intersect transit T exactly when its AOS is at/after
+ * T's LOS, or its LOS is at/before T's AOS (these two cases cannot both hold).
+ * Every transit with LOS at/before T's AOS also has AOS before T's LOS, so:
+ *   intersecting = (#AOS < T.LOS) − (#LOS ≤ T.AOS) − 1 (T itself)
  * which is computed in O(n log n) using two sorted arrays and binary search.
  */
 export function countConflicts(transits: Transit[]): number[] {
-  const starts = Float64Array.from(transits, (t) => t.startMs).sort()
-  const stops = Float64Array.from(transits, (t) => t.stopMs).sort()
+  const aosTimes = Float64Array.from(transits, (t) => t.aosMs).sort()
+  const losTimes = Float64Array.from(transits, (t) => t.losMs).sort()
 
   return transits.map((t) => {
-    const startingBeforeStop = countLessThan(starts, t.stopMs)
-    const stoppedBeforeStart = countAtMost(stops, t.startMs)
+    const aosBeforeLos = countLessThan(aosTimes, t.losMs)
+    const losBeforeAos = countAtMost(losTimes, t.aosMs)
     // Subtract 1 for the transit itself.
-    return startingBeforeStop - stoppedBeforeStart - 1
+    return aosBeforeLos - losBeforeAos - 1
   })
 }
 
@@ -64,5 +64,5 @@ export function findConflicts(
 ): Transit[] {
   return stationTransits
     .filter((other) => other.id !== transit.id && intersects(transit, other))
-    .sort((a, b) => a.startMs - b.startMs)
+    .sort((a, b) => a.aosMs - b.aosMs)
 }

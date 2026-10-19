@@ -45,7 +45,7 @@ export function calculateTransits(
     const finish = () => {
       cancel()
       const transits = results.flat()
-      transits.sort((a, b) => a.startMs - b.startMs)
+      transits.sort((a, b) => a.aosMs - b.aosMs)
       resolve({ transits, errors: [...errors] })
     }
 
