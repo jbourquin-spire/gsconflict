@@ -67,6 +67,7 @@ function Bar({
         <div>AOS: {formatUtc(transit.aosMs)} UTC</div>
         <div>LOS: {formatUtc(transit.losMs)} UTC</div>
         <div>Duration: {formatDuration(transit.durationS)}</div>
+        <div>Peak elevation: {transit.peakElevationDeg.toFixed(1)}°</div>
         {reference && (
           <div className="mt-1 border-t border-border pt-1">
             Overlap: {formatDuration((overlapStop - overlapStart) / 1000)} (
