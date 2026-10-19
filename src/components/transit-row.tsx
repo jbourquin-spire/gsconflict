@@ -8,7 +8,7 @@ import { formatDuration, formatUtc } from '@/lib/format'
 import type { Transit } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
-export const TRANSIT_COLUMN_COUNT = 8
+export const TRANSIT_COLUMN_COUNT = 9
 
 function TransitCells({ transit }: { transit: Transit }) {
   return (
@@ -19,6 +19,7 @@ function TransitCells({ transit }: { transit: Transit }) {
       <TableCell>{formatUtc(transit.losMs)}</TableCell>
       <TableCell>{formatDuration(transit.durationS)}</TableCell>
       <TableCell>{transit.peakElevationDeg.toFixed(1)}°</TableCell>
+      <TableCell>{transit.peakEclipseFactor.toFixed(2)}</TableCell>
       <TableCell>{transit.groundStation}</TableCell>
     </>
   )

@@ -538,6 +538,7 @@ export default function App() {
                   <TableHead>LOS time (UTC)</TableHead>
                   <TableHead>Duration</TableHead>
                   <TableHead>Peak elevation</TableHead>
+                  <TableHead>Peak eclipse factor</TableHead>
                   <TableHead>
                     <MultiSelectFilter
                       label="Ground station"

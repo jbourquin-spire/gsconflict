@@ -10,6 +10,7 @@ function transit(id: string, aosMs: number, losMs: number): Transit {
     durationS: (losMs - aosMs) / 1000,
     peakMs: aosMs,
     peakElevationDeg: 45,
+    peakEclipseFactor: 0,
     tcaMs: aosMs,
     groundStation: 'GS',
     satellite: id,

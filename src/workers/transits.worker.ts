@@ -54,6 +54,7 @@ self.onmessage = (event: MessageEvent<WorkerJob>) => {
           durationS: (los - aos) / 1000,
           peakMs: Number(pass.peak.epoch),
           peakElevationDeg: Number(pass.peak.elevation),
+          peakEclipseFactor: pass.peak.eclipseFactor,
           tcaMs: Number(pass.tca.epoch),
           groundStation: groundStation.name,
           satellite: satellite.name,

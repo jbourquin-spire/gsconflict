@@ -11,6 +11,7 @@ function transit(id: string, aosMs: number, losMs: number, station = 'GS'): Tran
     durationS: (losMs - aosMs) / 1000,
     peakMs: aosMs,
     peakElevationDeg: 45,
+    peakEclipseFactor: 0,
     tcaMs: aosMs,
     groundStation: station,
     satellite: `SAT ${id}`,
@@ -44,7 +45,7 @@ describe('export', () => {
     const [header, row] = transitsToCsv([t], all).split('\r\n')
     expect(header.endsWith('conflicts,conflicting_satellites')).toBe(true)
     expect(row).toBe(
-      'SAT a,a,1970-01-01T00:00:00.000Z,1970-01-01T00:00:00.010Z,0.0,1970-01-01T00:00:00.000Z,45.00,1970-01-01T00:00:00.000Z,GS,2,"[""SAT b"",""SAT e""]"',
+      'SAT a,a,1970-01-01T00:00:00.000Z,1970-01-01T00:00:00.010Z,0.0,1970-01-01T00:00:00.000Z,45.00,0.0000,1970-01-01T00:00:00.000Z,GS,2,"[""SAT b"",""SAT e""]"',
     )
   })
 })

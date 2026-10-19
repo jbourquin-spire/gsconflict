@@ -30,6 +30,8 @@ export interface Transit {
   peakMs: number
   /** Elevation at the peak, in degrees */
   peakElevationDeg: number
+  /** Fraction of the Sun's disc obscured by the Earth at the peak (0 = fully lit, 1 = umbra) */
+  peakEclipseFactor: number
   /** Time of closest approach, Unix epoch milliseconds */
   tcaMs: number
   groundStation: string
